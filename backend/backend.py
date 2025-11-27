@@ -8,8 +8,7 @@ app = Flask(__name__)
 # route -> what url should trigger our function
 # function returns what we want to display in the users browser
 
-import numpy as np
-
+# have to generate array first
 def gen_array(size: int, mode: str): # mode has 3 options, sorted, reverse, or random
     if mode == "sorted":
         array = np.arange(size)
@@ -20,7 +19,7 @@ def gen_array(size: int, mode: str): # mode has 3 options, sorted, reverse, or r
         array = np.random.randint(0, 100, size=size)
     return array.tolist()
 
-
+#bubble sort
 def bubble_sort(array: list):
     arr = list(array.copy())
     n = len(arr)
@@ -278,7 +277,8 @@ def merge_sort(array: list):
     yield {
         "array": arr, 
         "metrics": metrics,
-        "sorted": True}
+        "sorted": True
+        }
 
 algorithms = {
     "bubble": bubble_sort,
