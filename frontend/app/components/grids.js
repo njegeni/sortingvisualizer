@@ -13,7 +13,6 @@ export default function GridLayout({ array, comparisons, swaps, currentStep, ste
 }
 
 const Grid = ({ text, array, comparisons, swaps }) => {
-    // Check if array exists and has values
     if (!array || array.length === 0) {
         return (
             <div>
@@ -29,7 +28,6 @@ const Grid = ({ text, array, comparisons, swaps }) => {
         );
     }
     
-    // Find the maximum value to scale the bars
     const maxValue = Math.max(...array, 1);
     
     return (
@@ -38,14 +36,12 @@ const Grid = ({ text, array, comparisons, swaps }) => {
                 {text}
             </div>
             
-            {/* Metrics Display */}
             <div className="flex gap-4 text-sm p-2 pl-0">
                 <div>Comparisons: {comparisons}</div>
                 <div>Swaps: {swaps}</div>
                 <div>Array Size: {array.length}</div>
             </div>
             
-            {/* Visualization Area */}
             <div className="p-2 mt-1 pl-0">
                 <div className="bg-white h-72 w-full flex items-end justify-around gap-0.5 p-2">
                     {array.map((value, index) => (

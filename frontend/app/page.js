@@ -36,7 +36,7 @@ export default function Home() {
       setSteps(data.steps);
       setCurrentStep(0);
 
-      // Display the UNSORTED array first (not the first step)
+    
       setArray(data.initial_array);
       setComparisons(0);
       setSwaps(0);
