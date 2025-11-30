@@ -3,7 +3,7 @@ from flask_cors import CORS
 import numpy as np
 from typing import List, Dict, Generator, Any
 app = Flask(__name__)
-
+CORS(app)
 
 # route -> what url should trigger our function
 # function returns what we want to display in the users browser
@@ -21,7 +21,7 @@ def gen_array(size: int, mode: str): # mode has 3 options, sorted, reverse, or r
 
 #bubble sort
 def bubble_sort(array: list):
-    arr = list(array.copy())
+    arr = list(array)
     n = len(arr)
     #metrics for visualization
     comparisons = 0
@@ -31,7 +31,7 @@ def bubble_sort(array: list):
         for j in range(n-i-1):
             comparisons += 1
             yield {
-                "array": arr, 
+                "array": list(arr), 
                 "metrics": {"comps": comparisons, "swaps": swaps}, 
                 "comparing": [j, j + 1]
             }
@@ -39,15 +39,15 @@ def bubble_sort(array: list):
                 arr[j], arr[j+1] = arr[j+1], arr[j]
                 swaps += 1
                 yield {
-                    "array": arr, 
+                    "array": list(arr), 
                     "metrics": {"comps": comparisons, "swaps": swaps}, 
                     "swapping": [j, j + 1]
                 }
     yield {
-        "array": arr,
+        "array": list(arr),
         "metrics": {"comps": comparisons, "swaps": swaps}, 
         "sorted": True
-          }
+    }
 
 
 def insertion_sort(array: list):
@@ -64,7 +64,7 @@ def insertion_sort(array: list):
             comparisons += 1
             
             yield {
-                "array": arr, 
+                "array": list(arr), 
                 "metrics": {"comps": comparisons, "swaps": swaps}, 
                 "comparing": [j + 1, j],
                 "pivot_value_index": i
@@ -77,7 +77,7 @@ def insertion_sort(array: list):
             swaps += 1
             
             yield {
-                "array": arr, 
+                "array": list(arr), 
                 "metrics": {"comps": comparisons, "swaps": swaps}, 
                 "swapping": [j, j + 1]
             }
@@ -88,13 +88,13 @@ def insertion_sort(array: list):
         swaps += 1
         
         yield {
-            "array": arr, 
+            "array": list(arr), 
             "metrics": {"comps": comparisons, "swaps": swaps}, 
             "inserting": [j + 1]
         }
     
     yield {
-        "array": arr,
+        "array": list(arr),
         "metrics": {"comps": comparisons, "swaps": swaps}, 
         "sorted": True
     }
@@ -110,7 +110,7 @@ def selection_sort(array: list):
         min_index = i
         
         yield {
-            "array": arr, 
+            "array": list(arr), 
             "metrics": {"comps": comparisons, "swaps": swaps}, 
             "pivot": [i], 
             "min_index": [min_index]
@@ -120,7 +120,7 @@ def selection_sort(array: list):
             comparisons += 1
             
             yield {
-                "array": arr, 
+                "array": list(arr), 
                 "metrics": {"comps": comparisons, "swaps": swaps}, 
                 "comparing": [j, min_index],
                 "pivot": [i]
@@ -130,7 +130,7 @@ def selection_sort(array: list):
                 min_index = j
                 
                 yield {
-                    "array": arr, 
+                    "array": list(arr), 
                     "metrics": {"comps": comparisons, "swaps": swaps}, 
                     "min_index": [min_index],
                     "pivot": [i]
@@ -140,13 +140,17 @@ def selection_sort(array: list):
         swaps += 1
         
         yield {
-            "array": arr, 
+            "array": list(arr), 
             "metrics": {"comps": comparisons, "swaps": swaps}, 
             "swapping": [i, min_index],
             "sorted_index": [i]
         }
 
-    yield {"array": arr, "metrics": {"comps": comparisons, "swaps": swaps}, "sorted": True}
+    yield {
+        "array": list(arr), 
+        "metrics": {"comps": comparisons, "swaps": swaps}, 
+        "sorted": True
+    }
 
 def gnome_sort(array: list):
     arr = list(array)
@@ -162,7 +166,7 @@ def gnome_sort(array: list):
             comparisons += 1
             
             yield {
-                "array": arr, 
+                "array": list(arr), 
                 "metrics": {"comps": comparisons, "swaps": swaps}, 
                 "comparing": [index, index - 1]
             }
@@ -174,14 +178,18 @@ def gnome_sort(array: list):
                 swaps += 1
                 
                 yield {
-                    "array": arr, 
+                    "array": list(arr), 
                     "metrics": {"comps": comparisons, "swaps": swaps}, 
                     "swapping": [index, index - 1]
                 }
                 
                 index -= 1
                 
-    yield {"array": arr, "metrics": {"comps": comparisons, "swaps": swaps}, "sorted": True}
+    yield {
+        "array": list(arr), 
+        "metrics": {"comps": comparisons, "swaps": swaps}, 
+        "sorted": True
+    }
 
 def quick_sort(array: list):
     arr = list(array)
@@ -192,24 +200,42 @@ def quick_sort(array: list):
         pivot = arr[high]
         i = low - 1
         
-        yield {"array": arr, "metrics": metrics, "pivot": [high]}
+        yield {
+            "array": list(arr), 
+            "metrics": metrics, 
+            "pivot": [high]
+        }
         
         for j in range(low, high):
             metrics["comps"] += 1
             
-            yield {"array": arr, "metrics": metrics, "comparing": [j], "pivot": [high]}
+            yield {
+                "array": list(arr), 
+                "metrics": metrics, 
+                "comparing": [j], 
+                "pivot": [high]
+            }
             
             if arr[j] <= pivot:
                 i += 1
                 arr[i], arr[j] = arr[j], arr[i]
                 metrics["swaps"] += 1
                 
-                yield {"array": arr, "metrics": metrics, "swapping": [i, j], "pivot": [high]}
+                yield {
+                    "array": list(arr), 
+                    "metrics": metrics, 
+                    "swapping": [i, j], 
+                    "pivot": [high]
+                }
         
         arr[i + 1], arr[high] = arr[high], arr[i + 1]
         metrics["swaps"] += 1
         
-        yield {"array": arr, "metrics": metrics, "sorted_index": [i + 1]}
+        yield {
+            "array": list(arr), 
+            "metrics": metrics, 
+            "sorted_index": [i + 1]
+        }
         
         return i + 1
 
@@ -227,7 +253,11 @@ def quick_sort(array: list):
             stack.append((pivot_index + 1, high))
             stack.append((low, pivot_index - 1))
             
-    yield {"array": arr, "metrics": metrics, "sorted": True}
+    yield {
+        "array": list(arr), 
+        "metrics": metrics, 
+        "sorted": True
+    }
 
 def merge_sort(array: list):
     arr = list(array)
@@ -240,7 +270,11 @@ def merge_sort(array: list):
         while i < len(left) and j < len(right):
             metrics["comps"] += 1
             
-            yield {"array": arr, "metrics": metrics, "comparing": [start_index + i, start_index + len(left) + j]}
+            yield {
+                "array": list(arr), 
+                "metrics": metrics, 
+                "comparing": [start_index + i, start_index + len(left) + j]
+            }
             
             if left[i] < right[j]:
                 result.append(left[i])
@@ -256,7 +290,11 @@ def merge_sort(array: list):
             arr[start_index + k] = result[k]
             metrics["swaps"] += 1
             
-            yield {"array": arr, "metrics": metrics, "swapping": [start_index + k]}
+            yield {
+                "array": list(arr), 
+                "metrics": metrics, 
+                "swapping": [start_index + k]
+            }
 
     def _merge_sort(arr, low, high, metrics):
         if low >= high:
@@ -275,10 +313,10 @@ def merge_sort(array: list):
     yield from _merge_sort(arr, 0, len(arr) - 1, metrics)
     
     yield {
-        "array": arr, 
+        "array": list(arr), 
         "metrics": metrics,
         "sorted": True
-        }
+    }
 
 algorithms = {
     "bubble": bubble_sort,
@@ -288,9 +326,6 @@ algorithms = {
     "merge": merge_sort,
     "quick": quick_sort,
 }
-
-# @app.post("api/sort/generate")
-#     ...
 
 @app.route('/api/sort/generate', methods=['POST'])
 def generate_sort_steps():
@@ -308,6 +343,7 @@ def generate_sort_steps():
 
     try:
         initial_array = gen_array(size, mode)
+        original_array = list(initial_array)
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
     
@@ -316,10 +352,10 @@ def generate_sort_steps():
     except Exception as e:
         return jsonify({"error": f"Error during algorithm execution: {e}"}), 500
 
+    return jsonify({
+        "initial_array": original_array,
+        "steps": steps
+    })
 
-    return jsonify({"steps": steps})
-
-
-
-#flask --app discrete run
-#@app.route("/whatever") can be whatever
+if __name__ == "__main__":
+    app.run(debug=True, port=8080)
